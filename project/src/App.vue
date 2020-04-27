@@ -61,7 +61,7 @@ export default {
 
     //To start the web cam
     checkWebcam() {
-     console.log(window.getCameraList().length) 
+     
       const video = document.getElementById("video");
       const constraints = {
         audio: true,
