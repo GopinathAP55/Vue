@@ -118,18 +118,36 @@ export default {
     },
 
     checkMic() {
-       window.microphoneLevel({
-        onResult: function(meter , time){
-            if (meter.checkClipping()) {
-                console.warn(meter.volume);
-            } else {
-                console.log(meter.volume);
-            }
-        },
-        onError: function(err){
-            console.error(err);
+      self = this;
+      const audio = document.getElementById("song");
+      if(self.micText==='Start MIC test'){
+      
+       
+
+       async function init() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({audio : true});
+          audio.srcObject =stream;
+          self.audioStart = true;
+          self.micText = "Stop MIC test";
+        } catch (e) {
+          console.log(e);
+          self.errorText =
+            "User blocked the access of the MIC. If you want to continue give access to the MIC.";
+          self.audioStart = false;
+          self.clearErrortext();
         }
-    });
+      }
+      init();
+    }else{
+       self.audioStart = false;
+       self.micText = "Start MIC test";
+       const stream = audio.srcObject;
+        audio.srcObject = null;
+        stream.getTracks().forEach(function(track) {
+          track.stop();
+        });
+    }
     },
 
     clearErrortext() {
