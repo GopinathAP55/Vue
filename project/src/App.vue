@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div>
-      <button
-        @click="checkOnline"
+    
+      <!--
+        <div> <button
+        @click="checkConnectionSpeed"
         type="submit"
         class="btn btn-success text-right"
         style="color: rgb(51, 122, 183); background-color: rgb(217, 237, 247);
@@ -24,21 +25,29 @@
         class="btn btn-success text-right"
         style="color: rgb(51, 122, 183); background-color: rgb(217, 237, 247);
             border-color: rgb(188, 232, 241);"
-      >stop</button>
-    </div>
+      >stop</button> -->
+    <!-- </div>
     <div class="video-wrap">
       <video id="video" playsinline autoplay controls></video>
-    </div>
+    </div> -->
+    
+    <AudioVideoTest></AudioVideoTest>
+
+
   </div>
 </template>
 
 <script>
 import $ from "jquery";
 import FastSpeedtest from "fast-speedtest-api";
+import AudioVideoTest from './components/audioVideoTest'
+import HelloWorld from './components/HelloWorld'
 
 export default {
   name: "app",
-  components: {},
+  components: {
+    AudioVideoTest
+  },
   data: () => ({
     msg: "gopi",
     go: true,
@@ -66,8 +75,8 @@ export default {
       const constraints = {
         audio: true,
         video: {
-          width: 128,
-          height: 72
+          width: 1280,
+          height: 720
         }
       };
 
@@ -120,8 +129,30 @@ export default {
         }
       }, 5000);
     },
+    checkConnectionSpeed(){
+      if(navigator.onLine){
+
+
+
+
+        
+      let start = new Date().getTime()
+     fetch('http://images.ctfassets.net/ /wtrHxeu3zEoEce2MokCSi/cf6f68efdcf625fdc060607df0f3baef/quwowooybuqbl6ntboz3.jpg').
+     then((res)=> {
+       
+       let end = new Date().getTime()
+       console.log((end-start)/1000);
+     }) 
+    }
+
+    },
     checkOnline: function() {
       if (navigator.onLine) {
+
+        let startTime  = new Date().getTime();
+
+        
+
         if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
           // Firefox 38+ seems having support of enumerateDevicesx
           navigator.enumerateDevices = function(callback) {
