@@ -14,6 +14,8 @@
     >{{micText}}</button>
     <br />
 
+    <audio style="visibility ='hidden'" id="micTest"></audio>
+
     <div data-app id="dialogBox">
       <v-dialog v-model="dialog" persistent width="50%">
         <v-card>
@@ -37,6 +39,18 @@
               src="https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_1MG.wav"
               id="song"
             ></audio>
+            <div v-show="showMIC" class="pids-wrapper">
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+              <div class="pid"></div>
+            </div>
           </div>
 
           <v-card-actions>
@@ -45,6 +59,8 @@
             <v-btn v-show="start" color="green darken-1" text @click="checkWebcam">close video</v-btn>
             <v-btn v-show="audioStart" color="green darken-1" text @click="testAudio">close audio</v-btn>
             <v-btn v-if="errorText !== ''" color="green darken-1" text @click="dialog=false">close</v-btn>
+            <v-btn v-show="showMIC" color="green darken-1" text @click="checkMic">close MIC</v-btn>
+
             <v-btn
               v-if="internet"
               color="green darken-1"
@@ -64,7 +80,6 @@ import p from "vue-p5";
 import $ from "jquery";
 import axios from "axios";
 
-
 export default {
   name: "AudioVideoTest",
   data: () => ({
@@ -77,7 +92,8 @@ export default {
     internetSpeed: "",
     dialog: true,
     internet: false,
-    internetSpeed: ""
+    internetSpeed: "",
+    showMIC: false
   }),
   watch: {
     internet(val) {
@@ -89,7 +105,8 @@ export default {
   mounted() {
     console.log("started");
     var scriptTag = document.createElement("script");
-    scriptTag.src =  "https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/addons/p5.sound.min.js";
+    scriptTag.src =
+      "https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/addons/p5.sound.min.js";
     scriptTag.id = "my-datatable";
     document.getElementsByTagName("head")[0].appendChild(scriptTag);
 
@@ -169,6 +186,8 @@ export default {
             dialogBox.style.visibility = "visible";
           } catch (e) {
             console.log(e);
+            dialogBox.style.visibility = "visible";
+
             self.errorText =
               "User blocked the access of the webcam/MIC. If you want to continue give access to the webcam/MIC.";
             self.start = false;
@@ -190,13 +209,14 @@ export default {
     checkInternetSpeed() {
       this.dialog = true;
 
-      this.internet = true;
       this.errorText = "";
       const dialogBox = document.getElementById("dialogBox");
       dialogBox.style.visibility = "visible";
 
       console.log("into()");
       if (navigator.onLine) {
+        this.internet = true;
+
         let apiBaseUrl = "http://localhost:3000/api";
         axios
           .get(apiBaseUrl + "/speed")
@@ -216,21 +236,79 @@ export default {
     },
 
     checkMic() {
-      console.log(p)
       this.errorText = "";
-     const script = function(p5) {
-      window.myp5 = p5;
-      let mic;
-      // NOTE: Set up is here
-      p5.setup = _ => {
-        mic = new p5.AudioIn();
-      }; // NOTE: Draw is here
-      p5.draw = _ => {};
-    }; // NOTE: Use p5 as an instance mode
-    const P5 = require("p5");
-    
-    script(P5);
-    new P5(script)
+
+      const micTest = document.getElementById("micTest");
+      if (!this.showMIC) {
+        this.showMIC = true;
+        this.dialog = true;
+        const dialogBox = document.getElementById("dialogBox");
+        let audioContext;
+        let analyser;
+        let microphone;
+        let javascriptNode;
+        self = this;
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then(function(stream) {
+            micTest.srcObject = stream;
+            dialogBox.style.visibility = "visible";
+            audioContext = new AudioContext();
+            analyser = audioContext.createAnalyser();
+            microphone = audioContext.createMediaStreamSource(stream);
+            javascriptNode = audioContext.createScriptProcessor(2048, 1, 1);
+
+            analyser.smoothingTimeConstant = 0.8;
+            analyser.fftSize = 1024;
+
+            microphone.connect(analyser);
+            analyser.connect(javascriptNode);
+            javascriptNode.connect(audioContext.destination);
+            javascriptNode.onaudioprocess = function() {
+              var array = new Uint8Array(analyser.frequencyBinCount);
+              analyser.getByteFrequencyData(array);
+              var values = 0;
+
+              var length = array.length;
+              for (var i = 0; i < length; i++) {
+                values += array[i];
+              }
+
+              var average = values / length;
+
+              console.log(Math.round(average));
+              colorPids(average);
+            };
+          })
+          .catch(function(err) {
+            dialogBox.style.visibility = "visible";
+            self.showMIC = false;
+            self.errorText =
+              "User blocked the access of the MIC. If you want to continue give access to the MIC.";
+            console.log(err);
+          });
+        function colorPids(vol) {
+          let all_pids = $(".pid");
+          let amout_of_pids = Math.round(vol / 10);
+          let elem_range = all_pids.slice(0, amout_of_pids);
+          for (var i = 0; i < all_pids.length; i++) {
+            all_pids[i].style.backgroundColor = "#e6e7e8";
+          }
+          for (var i = 0; i < elem_range.length; i++) {
+            // console.log(elem_range[i]);
+            elem_range[i].style.backgroundColor = "#69ce2b";
+          }
+        }
+      } else {
+        this.showMIC = false;
+        this.dialog = false;
+        const stream = micTest.srcObject;
+        micTest.srcObject = null;
+        stream.getTracks().forEach(function(track) {
+          track.stop();
+        });
+        console.log("streamed");
+      }
     }
   }
 };
@@ -246,5 +324,14 @@ button {
 #song {
   visibility: hidden;
   position: relative;
+}
+.pids-wrapper {
+  width: 100%;
+}
+.pid {
+  width: calc(10% - 10px);
+  height: 10px;
+  display: inline-block;
+  margin: 5px;
 }
 </style>
