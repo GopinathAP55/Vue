@@ -36,7 +36,7 @@
               v-show="audioStart"
               controls
               loop
-              src="https://file-examples.com/wp-content/uploads/2017/11/file_example_WAV_1MG.wav"
+              src="../assets/ringtone.mp3"
               id="song"
             ></audio>
             <div v-show="showMIC" class="pids-wrapper">
@@ -102,29 +102,7 @@ export default {
       setTimeout(() => (this.internet = false), 114000);
     }
   },
-  mounted() {
-    console.log("started");
-    var scriptTag = document.createElement("script");
-    scriptTag.src =
-      "https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/addons/p5.sound.min.js";
-    scriptTag.id = "my-datatable";
-    document.getElementsByTagName("head")[0].appendChild(scriptTag);
-
-    // const script = function(p5) {
-    //   window.myp5 = p5;
-    //   let mic;
-    //   // NOTE: Set up is here
-    //   p5.setup = _ => {
-    //     mic = new myp5.AudioIn();
-    //   }; // NOTE: Draw is here
-    //   p5.draw = _ => {};
-    // }; // NOTE: Use p5 as an instance mode
-    // const P5 = require("p5");
-    // const P5Sound = require("p5/lib/addons/p5.sound.js");
-    // console.log(P5Sound);
-    // script(P5Sound);
-    // new P5(script);
-  },
+  
   methods: {
     testAudio() {
       this.errorText = "";
