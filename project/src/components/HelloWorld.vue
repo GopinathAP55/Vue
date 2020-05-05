@@ -12,7 +12,11 @@
 <script>
 export default {
   name: 'HelloWorld',
-  props:["names1"]
+  props:["names1"],
+  created(){
+    
+
+  }
 
 }
 </script>
