@@ -1,6 +1,48 @@
 <template>
   <div>
-    <button class="btn btn-primary" @click="testAudio()">{{audioText}}</button>
+    <div id="mainBar">
+      <nav class="navbar navbar-dark bg-primary">
+        <h1 class="navbar-brand" href="#">OMS C3 Pre-Test</h1>
+        <button id="start" class="btn btn-primary" @click="startOMSTest">
+          <h4>Start</h4>
+        </button>
+      </nav>
+    </div>
+
+    <div>
+      <nav
+        v-bind:class="[micPass!=='' && micPass === 'Passed' ? 'pass' : [micPass==''?'':'fail']]"
+        class="navbar navbar-dark subnav"
+      >
+        <span>Microphone {{micPass}}</span>
+      </nav>
+    </div>
+    <div>
+      <nav
+        v-bind:class="[audioPass !=='' && audioPass === 'Passed' ? 'pass' : [audioPass ==''?'':'fail']]"
+        class="navbar navbar-dark subnav"
+      >
+        <span>Audio {{audioPass}}</span>
+      </nav>
+    </div>
+    <div>
+      <nav
+        v-bind:class="[webcamPass !=='' && webcamPass === 'Passed' ? 'pass' : [webcamPass ==''?'':'fail']]"
+        class="navbar navbar-dark subnav"
+      >
+        <span>Webcam {{webcamPass}}</span>
+      </nav>
+    </div>
+    <div>
+      <nav
+        v-bind:class="[internetPass !=='' && internetPass === 'Passed' ? 'pass' : [internetPass ==''?'':'fail']]"
+        class="navbar navbar-dark subnav"
+      >
+        <span>Internet speed {{internetPass}}</span>
+      </nav>
+    </div>
+
+    <!-- <button class="btn btn-primary" @click="testAudio()">{{audioText}}</button>
     <br />
 
     <button class="btn btn-primary" @click="checkWebcam">{{videoText}}</button>
@@ -12,11 +54,11 @@
       v-bind:class="[micText === 'Start MIC test' ? 'btn btn-primary' : 'alert']"
       @click="checkMic"
     >{{micText}}</button>
-    <br />
+    <br />-->
 
     <audio style="visibility ='hidden'" id="micTest"></audio>
 
-    <div data-app id="dialogBox">
+    <!-- <div data-app id="dialogBox">
       <v-dialog v-model="dialog" persistent width="50%">
         <v-card>
           <v-card-title class="headline"></v-card-title>
@@ -30,16 +72,10 @@
             {{internetSpeed}}
             <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
           </v-card-text>
-          <div id="main">
-            <video v-show="start" id="videoTag" playsinline autoplay controls></video>
-            <audio
-              v-show="audioStart"
-              controls
-              loop
-              src="../assets/ringtone.mp3"
-              id="song"
-            ></audio>
-            <div v-show="showMIC" class="pids-wrapper">
+    <div id="main">-->
+    <!-- <video v-show="start" id="videoTag" playsinline autoplay controls></video>
+    <audio v-show="audioStart" controls loop src="../assets/ringtone.mp3" id="song"></audio>-->
+    <!-- <div v-show="showMIC" class="pids-wrapper">
               <div class="pid"></div>
               <div class="pid"></div>
               <div class="pid"></div>
@@ -50,8 +86,8 @@
               <div class="pid"></div>
               <div class="pid"></div>
               <div class="pid"></div>
-            </div>
-          </div>
+    </div>-->
+    <!-- </div>
 
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -70,6 +106,45 @@
           </v-card-actions>
         </v-card>
       </v-dialog>
+    </div>-->
+
+    <div id="dialogBox">
+      <div v-if="dialog">
+        <transition name="modal">
+          <div class="modal-mask">
+            <div class="modal-wrapper">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">OMS Pre-test</div>
+
+                  <div v-show="internet">
+                    <span>Checking internet speed...</span>
+                    <br />
+                    {{internetSpeed}}
+                  </div>
+
+                  <video v-show="start" id="videoTag" playsinline autoplay controls></video>
+                  <audio v-show="audioStart" controls loop src="../assets/ringtone.mp3" id="song"></audio>
+                  <div class="modal-body">
+                    <div v-show="showMIC" class="pids-wrapper">
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                      <div class="pid"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -82,6 +157,9 @@ import axios from "axios";
 
 export default {
   name: "AudioVideoTest",
+  components: {
+    
+  },
   data: () => ({
     audioText: "Start audio",
     videoText: "Start webcam",
@@ -93,44 +171,38 @@ export default {
     dialog: true,
     internet: false,
     internetSpeed: "",
-    showMIC: false
+    showMIC: false,
+    showModal: false,
+    micPass: "",
+    audioPass: "",
+    webcamPass: "",
+    internetPass: ""
   }),
-  watch: {
-    internet(val) {
-      if (!val) return;
 
-      setTimeout(() => (this.internet = false), 114000);
-    }
-  },
-  
   methods: {
+    startOMSTest() {
+      this.checkMic();
+    },
+
     testAudio() {
       this.errorText = "";
       this.dialog = true;
       let audio = document.getElementById("song");
       const dialogBox = document.getElementById("dialogBox");
 
-      if (navigator.onLine) {
-        if (!this.audioStart) {
-          self = this;
-          audio.type = "audio/wav";
-
-          self.audioStart = true;
-          audio.style.visibility = "visible";
-          audio.style.marginLeft = "35%";
-          dialogBox.style.visibility = "visible";
-          audio.play();
-        } else {
-          audio.pause();
-          this.dialog = false;
-          dialogBox.style.visibility = "hidden";
-          audio.style.visibility = "hidden";
-
-          this.audioStart = false;
-        }
-      } else {
+      if (!this.audioStart) {
+        self = this;
+        self.audioStart = true;
+        audio.style.visibility = "visible";
         dialogBox.style.visibility = "visible";
-        this.errorText = "Please check your internet connection.";
+        audio.play();
+        setTimeout(() => {
+          audio.pause();
+          audio.style.visibility = "hidden";
+          dialogBox.style.visibility = "hidden";
+          self.audioPass = "Passed";
+          self.checkWebcam();
+        }, 5000);
       }
     },
     checkWebcam() {
@@ -143,10 +215,9 @@ export default {
       var self = this;
       if (!self.start) {
         const constraints = {
-          audio: true,
           video: {
-            width: 640,
-            height: 480
+            width: 480,
+            height: 240
           }
         };
 
@@ -160,56 +231,59 @@ export default {
             video.srcObject = stream;
             self.start = true;
             video.style.visibility = "visible";
-            video.style.marginLeft = "13%";
             dialogBox.style.visibility = "visible";
+            setTimeout(() => {
+              const stream = video.srcObject;
+              video.srcObject = null;
+              if (stream != null) {
+                stream.getTracks().forEach(function(track) {
+                  track.stop();
+                });
+              }
+              video.style.visibility = "hidden";
+              dialogBox.style.visibility = "hidden";
+              self.webcamPass = "Passed";
+              setTimeout(() => {
+                self.checkInternetSpeed();
+              }, 1000);
+            }, 5000);
           } catch (e) {
             console.log(e);
-            dialogBox.style.visibility = "visible";
-
-            self.errorText =
-              "User blocked the access of the webcam/MIC. If you want to continue give access to the webcam/MIC.";
+            dialogBox.style.visibility = "hidden";
             self.start = false;
+            self.webcamPass = "Failed";
+            setTimeout(() => {
+              self.checkInternetSpeed();
+            }, 1000);
           }
         }
         init();
-      } else {
-        const stream = video.srcObject;
-        video.srcObject = null;
-        stream.getTracks().forEach(function(track) {
-          track.stop();
-        });
-        this.dialog = false;
-        dialogBox.style.visibility = "hidden";
-        video.style.visibility = "hidden";
-        this.start = false;
       }
     },
     checkInternetSpeed() {
+      console.log("se");
       this.dialog = true;
-
-      this.errorText = "";
       const dialogBox = document.getElementById("dialogBox");
       dialogBox.style.visibility = "visible";
 
-      console.log("into()");
       if (navigator.onLine) {
         this.internet = true;
+        self = this;
 
         let apiBaseUrl = "http://localhost:3000/api";
         axios
           .get(apiBaseUrl + "/speed")
           .then(res => {
-            console.log("into");
-            console.log(res);
             this.internetSpeed = res.data;
             dialogBox.style.visibility = "visible";
+            self.internetPass = "Passed";
           })
           .catch(e => {
-            console.log(e);
+            dialogBox.style.visibility = "hidden";
+            self.internetPass = "Failed";
           });
       } else {
-        dialogBox.style.visibility = "visible";
-        this.errorText = "Please check your internet connection yoyo.";
+        this.internetPass = "Failed";
       }
     },
 
@@ -253,17 +327,38 @@ export default {
               }
 
               var average = values / length;
+              let pass = false;
 
-              console.log(Math.round(average));
               colorPids(average);
+              setTimeout(function() {
+                if (!pass && average > 0) {
+                  self.micPass = "Passed";
+                  this.pass = true;
+                } else {
+                  self.micPass = "Failed";
+                  dialogBox.style.visibility = "hidden";
+                  self.showMIC = false;
+                }
+                const stream = micTest.srcObject;
+                micTest.srcObject = null;
+                if (stream != null) {
+                  stream.getTracks().forEach(function(track) {
+                    track.stop();
+                  });
+                }
+                setTimeout(() => {
+                  self.testAudio();
+                }, 1000);
+              }, 5000);
             };
           })
           .catch(function(err) {
-            dialogBox.style.visibility = "visible";
+            dialogBox.style.visibility = "hidden";
             self.showMIC = false;
-            self.errorText =
-              "User blocked the access of the MIC. If you want to continue give access to the MIC.";
-            console.log(err);
+            self.micPass = "Failed";
+            setTimeout(() => {
+              self.testAudio();
+            }, 1000);
           });
         function colorPids(vol) {
           let all_pids = $(".pid");
@@ -311,5 +406,27 @@ button {
   height: 10px;
   display: inline-block;
   margin: 5px;
+}
+#start {
+  background-color: #9e9;
+  color: #000;
+  margin-top: 1%;
+}
+.subnav {
+  background-color: rgb(199, 206, 202);
+  margin: 5%;
+  padding: 1%;
+}
+#mainBar {
+  margin-top: 3%;
+}
+.modal-active {
+  display: block;
+}
+.pass {
+  background-color: #9e9;
+}
+.fail {
+  background-color: #ec9090;
 }
 </style>
