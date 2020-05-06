@@ -14,7 +14,7 @@
         v-bind:class="[micPass!=='' && micPass === 'Passed' ? 'pass' : [micPass==''?'':'fail']]"
         class="navbar navbar-dark subnav"
       >
-        <span>Microphone {{micPass}}</span>
+        <span>Microphone {{micPass | toUpperCase}}</span>
       </nav>
     </div>
     <div>
@@ -22,15 +22,15 @@
         v-bind:class="[audioPass !=='' && audioPass === 'Passed' ? 'pass' : [audioPass ==''?'':'fail']]"
         class="navbar navbar-dark subnav"
       >
-        <span>Audio {{audioPass}}</span>
+        <span>Audio {{ audioPass | toUpperCase}}</span>
       </nav>
     </div>
     <div>
       <nav
         v-bind:class="[webcamPass !=='' && webcamPass === 'Passed' ? 'pass' : [webcamPass ==''?'':'fail']]"
-        class="navbar navbar-dark subnav"
+        class="navbar navbar-dark subnav style-scope testrtc-suite x-scope iron-icon-0"
       >
-        <span>Webcam {{webcamPass}}</span>
+        <span>Webcam {{ webcamPass | toUpperCase}}</span>
       </nav>
     </div>
     <div>
@@ -38,7 +38,7 @@
         v-bind:class="[internetPass !=='' && internetPass === 'Passed' ? 'pass' : [internetPass ==''?'':'fail']]"
         class="navbar navbar-dark subnav"
       >
-        <span>Internet speed {{internetPass}}</span>
+        <span>Internet speed {{internetPass | toUpperCase}}{{ internetSpeed}}</span>
       </nav>
     </div>
 
@@ -57,25 +57,17 @@
     <br />-->
 
     <audio style="visibility ='hidden'" id="micTest"></audio>
+    <video style="visibility ='hidden'" id="videoTag" playsinline autoplay controls></video>
 
-    <!-- <div data-app id="dialogBox">
-      <v-dialog v-model="dialog" persistent width="50%">
+    <div data-app id="dialogBox">
+      <v-dialog v-model="dialog" persistent >
         <v-card>
           <v-card-title class="headline"></v-card-title>
-
-          <v-card-text>
-            <h4>{{errorText}}</h4>
-          </v-card-text>
-          <v-card-text v-show="internet">
-            <span>Checking internet speed...</span>
-            <br />
-            {{internetSpeed}}
-            <v-progress-linear indeterminate color="white" class="mb-0"></v-progress-linear>
-          </v-card-text>
-    <div id="main">-->
-    <!-- <video v-show="start" id="videoTag" playsinline autoplay controls></video>
-    <audio v-show="audioStart" controls loop src="../assets/ringtone.mp3" id="song"></audio>-->
-    <!-- <div v-show="showMIC" class="pids-wrapper">
+     
+           <div id="main">
+            <!-- <video v-show="start" id="videoTag" playsinline autoplay controls></video> -->
+            <audio v-show="audioStart" controls src="../assets/ringtone.mp3" id="song"></audio>
+            <div v-show="showMIC" class="pids-wrapper">
               <div class="pid"></div>
               <div class="pid"></div>
               <div class="pid"></div>
@@ -86,29 +78,29 @@
               <div class="pid"></div>
               <div class="pid"></div>
               <div class="pid"></div>
-    </div>-->
-    <!-- </div>
+            </div>
+          </div>
 
           <v-card-actions>
             <v-spacer></v-spacer>
 
-            <v-btn v-show="start" color="green darken-1" text @click="checkWebcam">close video</v-btn>
+            <!-- <v-btn v-show="start" color="green darken-1" text @click="checkWebcam">close video</v-btn>
             <v-btn v-show="audioStart" color="green darken-1" text @click="testAudio">close audio</v-btn>
             <v-btn v-if="errorText !== ''" color="green darken-1" text @click="dialog=false">close</v-btn>
-            <v-btn v-show="showMIC" color="green darken-1" text @click="checkMic">close MIC</v-btn>
+            <v-btn v-show="showMIC" color="green darken-1" text @click="checkMic">close MIC</v-btn>-->
 
-            <v-btn
+            <!-- <v-btn
               v-if="internet"
               color="green darken-1"
               text
               @click="dialog=false, internet=false, internetSpeed=''"
-            >close</v-btn>
+            >close</v-btn> -->
           </v-card-actions>
         </v-card>
       </v-dialog>
-    </div>-->
+    </div>
 
-    <div id="dialogBox">
+    <!-- <div id="dialogBox">
       <div v-if="dialog">
         <transition name="modal">
           <div class="modal-mask">
@@ -123,7 +115,6 @@
                     {{internetSpeed}}
                   </div>
 
-                  <video v-show="start" id="videoTag" playsinline autoplay controls></video>
                   <audio v-show="audioStart" controls loop src="../assets/ringtone.mp3" id="song"></audio>
                   <div class="modal-body">
                     <div v-show="showMIC" class="pids-wrapper">
@@ -144,8 +135,8 @@
             </div>
           </div>
         </transition>
-      </div>
-    </div>
+      </div> 
+    </div>-->
   </div>
 </template>
 
@@ -157,9 +148,7 @@ import axios from "axios";
 
 export default {
   name: "AudioVideoTest",
-  components: {
-    
-  },
+  components: {},
   data: () => ({
     audioText: "Start audio",
     videoText: "Start webcam",
@@ -176,16 +165,30 @@ export default {
     micPass: "",
     audioPass: "",
     webcamPass: "",
-    internetPass: ""
+    internetPass: "",
+    isMobile:false
   }),
+  filters: {
+    toUpperCase(value) {
+      if (value !== "") {
+        return "- " + value.toUpperCase() + "! ";
+      }
+    }
+  },
 
   methods: {
     startOMSTest() {
+      this.isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+      if(!this.isMobile){
+         const dialogBox = document.getElementById("dialogBox");
+         dialogBox.style.width='50%'
+
+      }
+
       this.checkMic();
     },
 
     testAudio() {
-      this.errorText = "";
       this.dialog = true;
       let audio = document.getElementById("song");
       const dialogBox = document.getElementById("dialogBox");
@@ -193,8 +196,13 @@ export default {
       if (!this.audioStart) {
         self = this;
         self.audioStart = true;
-        audio.style.visibility = "visible";
         dialogBox.style.visibility = "visible";
+        audio.style.visibility = "visible";
+        if(!this.isMobile){
+            audio.style.marginLeft = "30%";
+        }else{
+          audio.style.marginLeft = "10%";
+        }
         audio.play();
         setTimeout(() => {
           audio.pause();
@@ -202,7 +210,7 @@ export default {
           dialogBox.style.visibility = "hidden";
           self.audioPass = "Passed";
           self.checkWebcam();
-        }, 5000);
+        }, 10000);
       }
     },
     checkWebcam() {
@@ -262,10 +270,7 @@ export default {
     },
     checkInternetSpeed() {
       console.log("se");
-      this.dialog = true;
-      const dialogBox = document.getElementById("dialogBox");
-      dialogBox.style.visibility = "visible";
-
+      this.dialog = false;
       if (navigator.onLine) {
         this.internet = true;
         self = this;
@@ -275,11 +280,9 @@ export default {
           .get(apiBaseUrl + "/speed")
           .then(res => {
             this.internetSpeed = res.data;
-            dialogBox.style.visibility = "visible";
             self.internetPass = "Passed";
           })
           .catch(e => {
-            dialogBox.style.visibility = "hidden";
             self.internetPass = "Failed";
           });
       } else {
@@ -333,10 +336,12 @@ export default {
               setTimeout(function() {
                 if (!pass && average > 0) {
                   self.micPass = "Passed";
+                    self.dialog = false
+
                   this.pass = true;
                 } else {
                   self.micPass = "Failed";
-                  dialogBox.style.visibility = "hidden";
+                  self.dialog = false
                   self.showMIC = false;
                 }
                 const stream = micTest.srcObject;
@@ -353,7 +358,7 @@ export default {
             };
           })
           .catch(function(err) {
-            dialogBox.style.visibility = "hidden";
+            self.dialog=false;
             self.showMIC = false;
             self.micPass = "Failed";
             setTimeout(() => {
@@ -416,6 +421,15 @@ button {
   background-color: rgb(199, 206, 202);
   margin: 5%;
   padding: 1%;
+  margin-top: 1.5em;
+  height: 3.3em;
+  display: flex;
+  padding-left: 1em;
+  padding-right: 1em;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.3em;
+  font-family: "Roboto", sans-serif;
 }
 #mainBar {
   margin-top: 3%;
@@ -429,4 +443,20 @@ button {
 .fail {
   background-color: #ec9090;
 }
+
+.header.testrtc-suite .title.testrtc-suite {
+  flex: 1;
+  font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.title.testrtc-suite {
+  margin-left: 0;
+}
+
+.header.testrtc-suite {
+  cursor: pointer;
+  font-size: 1.3em;
+}
+
 </style>
