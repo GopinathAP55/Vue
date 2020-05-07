@@ -340,21 +340,17 @@ width:'50%'
 
               colorPids(average);
               setTimeout(function() {
-                if (!pass && average > 0) {
-                  self.micPass = "Passed";
-                  self.dialog = false;
-
-                  this.pass = true;
-                } else {
-                  self.micPass = "Failed";
-                  self.showMIC = false;
-                }
                 const stream = micTest.srcObject;
                 micTest.srcObject = null;
                 if (stream != null) {
+                  self.micPass = "Passed";
+                  self.dialog = false;
                   stream.getTracks().forEach(function(track) {
                     track.stop();
                   });
+                }else{
+                  self.micPass = "Failed";
+                  self.showMIC = false;
                 }
                 setTimeout(() => {
                   self.testAudio();
