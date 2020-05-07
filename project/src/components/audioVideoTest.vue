@@ -57,7 +57,7 @@
     <br />-->
 
     <audio style="visibility ='hidden'" id="micTest"></audio>
-    <video style="visibility ='hidden'" id="videoTag" playsinline autoplay controls></video>
+    <video style="display ='none'" id="videoTag" playsinline autoplay controls></video>
 
     <div data-app id="dialogBox">
       <v-dialog id="myDialog" v-model="dialog" v-bind="vdialogMobile" persistent>
@@ -254,7 +254,7 @@ width:'50%'
                   track.stop();
                 });
               }
-              video.style.visibility = "hidden";
+              video.style.display = "none";
               dialogBox.style.visibility = "hidden";
               self.webcamPass = "Passed";
               setTimeout(() => {
