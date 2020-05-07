@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main">
     <div id="mainBar">
       <nav class="navbar navbar-dark bg-primary">
         <h1 class="navbar-brand" href="#">OMS C3 Pre-Test</h1>
@@ -27,7 +27,8 @@
     </div>
     <div>
       <nav
-        v-bind:class="[webcamPass !=='' && webcamPass === 'Passed' ? 'pass' : [webcamPass ==''?'':'fail']]"
+        v-bind:class="[webcamPass !=='' && webcamPass === 'Passed' ? 'pass' :
+          [webcamPass ==='Failed'?'fail': [webcamPass==='Processing'? 'process' : '']]]"
         class="navbar navbar-dark subnav style-scope testrtc-suite x-scope iron-icon-0"
       >
         <span>Webcam {{ webcamPass | toUpperCase}}</span>
@@ -35,7 +36,8 @@
     </div>
     <div>
       <nav
-        v-bind:class="[internetPass !=='' && internetPass === 'Passed' ? 'pass' : [internetPass ==''?'':'fail']]"
+        v-bind:class="[internetPass !=='' && internetPass === 'Passed' ? 'pass' :
+         [internetPass ==='Failed'?'fail': [internetPass==='Processing'? 'process' : '']]]"
         class="navbar navbar-dark subnav"
       >
         <span>Internet speed {{internetPass | toUpperCase}}{{ internetSpeed}}</span>
@@ -179,11 +181,11 @@ export default {
     vdialogMobile(){
       if(!this.isMobile){
        return{
-width:'50%'
+          width:'50%'
        } 
       }
     }
-  },
+   },
 
   methods: {
     startOMSTest() {
@@ -211,7 +213,7 @@ width:'50%'
         if (!this.isMobile) {
           audio.style.marginLeft = "30%";
         } else {
-          audio.style.marginLeft = "10%";
+          audio.style.marginLeft = "7%";
         }
         audio.play();
         setTimeout(() => {
@@ -224,8 +226,7 @@ width:'50%'
       }
     },
     checkWebcam() {
-      this.errorText = "";
-
+      this.webcamPass='Processing'
       const video = document.getElementById("videoTag");
 
       var self = this;
@@ -275,7 +276,7 @@ width:'50%'
       }
     },
     checkInternetSpeed() {
-      console.log("se");
+      this.internetPass = 'Processing'
       this.dialog = false;
       if (navigator.onLine) {
         this.internet = true;
@@ -417,6 +418,7 @@ button {
   background-color: #9e9;
   color: #000;
   margin-top: 1%;
+  margin-bottom: 0.9%;
 }
 .subnav {
   background-color: rgb(199, 206, 202);
@@ -433,7 +435,8 @@ button {
   font-family: "Roboto", sans-serif;
 }
 #mainBar {
-  margin-top: 3%;
+  margin-top: 6%;
+  margin-bottom: 7%;
 }
 .modal-active {
   display: block;
@@ -459,5 +462,12 @@ button {
   cursor: pointer;
   font-size: 1.3em;
 }
-
+#main {
+  margin: 0 auto 0 auto;
+  max-width: 50em;
+  /* padding: 1em 1.5em 1.3em 1.5em; */
+}
+.process {
+  background-color: rgb(240, 240, 80);
+}
 </style>
