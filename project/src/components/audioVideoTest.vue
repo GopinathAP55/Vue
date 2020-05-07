@@ -60,11 +60,11 @@
     <video style="visibility ='hidden'" id="videoTag" playsinline autoplay controls></video>
 
     <div data-app id="dialogBox">
-      <v-dialog v-model="dialog" persistent >
+      <v-dialog id="myDialog" v-model="dialog" v-bind="vdialogMobile" persistent>
         <v-card>
           <v-card-title class="headline"></v-card-title>
-     
-           <div id="main">
+
+          <div id="main">
             <!-- <video v-show="start" id="videoTag" playsinline autoplay controls></video> -->
             <audio v-show="audioStart" controls src="../assets/ringtone.mp3" id="song"></audio>
             <div v-show="showMIC" class="pids-wrapper">
@@ -94,7 +94,7 @@
               color="green darken-1"
               text
               @click="dialog=false, internet=false, internetSpeed=''"
-            >close</v-btn> -->
+            >close</v-btn>-->
           </v-card-actions>
         </v-card>
       </v-dialog>
@@ -166,7 +166,7 @@ export default {
     audioPass: "",
     webcamPass: "",
     internetPass: "",
-    isMobile:false
+    isMobile: false
   }),
   filters: {
     toUpperCase(value) {
@@ -175,14 +175,24 @@ export default {
       }
     }
   },
+  computed:{
+    vdialogMobile(){
+      if(!this.isMobile){
+       return{
+width:'50%'
+       } 
+      }
+    }
+  },
 
   methods: {
     startOMSTest() {
-      this.isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
-      if(!this.isMobile){
-         const dialogBox = document.getElementById("dialogBox");
-         dialogBox.style.width='50%'
-
+      this.isMobile = window.matchMedia(
+        "only screen and (max-width: 760px)"
+      ).matches;
+      if (!this.isMobile) {
+        const vdialog = document.getElementById("myDialog");
+        vdialog.style.width = "50%";
       }
 
       this.checkMic();
@@ -198,9 +208,9 @@ export default {
         self.audioStart = true;
         dialogBox.style.visibility = "visible";
         audio.style.visibility = "visible";
-        if(!this.isMobile){
-            audio.style.marginLeft = "30%";
-        }else{
+        if (!this.isMobile) {
+          audio.style.marginLeft = "30%";
+        } else {
           audio.style.marginLeft = "10%";
         }
         audio.play();
@@ -215,10 +225,8 @@ export default {
     },
     checkWebcam() {
       this.errorText = "";
-      this.dialog = true;
 
       const video = document.getElementById("videoTag");
-      const dialogBox = document.getElementById("dialogBox");
 
       var self = this;
       if (!self.start) {
@@ -238,8 +246,6 @@ export default {
             window.stream = stream;
             video.srcObject = stream;
             self.start = true;
-            video.style.visibility = "visible";
-            dialogBox.style.visibility = "visible";
             setTimeout(() => {
               const stream = video.srcObject;
               video.srcObject = null;
@@ -336,12 +342,11 @@ export default {
               setTimeout(function() {
                 if (!pass && average > 0) {
                   self.micPass = "Passed";
-                    self.dialog = false
+                  self.dialog = false;
 
                   this.pass = true;
                 } else {
                   self.micPass = "Failed";
-                  self.dialog = false
                   self.showMIC = false;
                 }
                 const stream = micTest.srcObject;
@@ -358,7 +363,7 @@ export default {
             };
           })
           .catch(function(err) {
-            self.dialog=false;
+            self.dialog = false;
             self.showMIC = false;
             self.micPass = "Failed";
             setTimeout(() => {
