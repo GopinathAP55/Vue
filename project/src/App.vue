@@ -1,37 +1,14 @@
 <template>
   <div>
     
-      <!--
-        <div> <button
-        @click="checkConnectionSpeed"
-        type="submit"
-        class="btn btn-success text-right"
-        style="color: rgb(51, 122, 183); background-color: rgb(217, 237, 247);
-            border-color: rgb(188, 232, 241);"
-      >Submit</button>
-      <br />
+    <!-- <router-link to='/'>home</router-link>
+        <router-link to='/about'>about</router-link>
+        <router-view/> -->
 
-      <button
-        @click="checkWebcam"
-        type="submit"
-        class="btn btn-success text-right"
-        style="color: rgb(51, 122, 183); background-color: rgb(217, 237, 247);
-            border-color: rgb(188, 232, 241);"
-      >webcam start</button>
-      <br />
-      <button
-        @click="stopWebcam"
-        type="submit"
-        class="btn btn-success text-right"
-        style="color: rgb(51, 122, 183); background-color: rgb(217, 237, 247);
-            border-color: rgb(188, 232, 241);"
-      >stop</button> -->
-    <!-- </div>
-    <div class="video-wrap">
-      <video id="video" playsinline autoplay controls></video>
-    </div> -->
-    
-    <AudioVideoTest></AudioVideoTest>
+
+
+
+    <AudioVideoTest />
 
 
   </div>
@@ -42,6 +19,8 @@ import $ from "jquery";
 import FastSpeedtest from "fast-speedtest-api";
 import AudioVideoTest from './components/audioVideoTest'
 import HelloWorld from './components/HelloWorld'
+import DataTable from './components/DataTable'
+import FormValidation from './components/FormValidation'
 
 export default {
   name: "app",

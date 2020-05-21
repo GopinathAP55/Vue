@@ -5,7 +5,6 @@ import bootstrap from '../node_modules/bootstrap/dist/css/bootstrap.css'
 import p5 from '../node_modules/p5/lib/p5.js'
 
 
-Vue.config.productionTip = false
 
 new Vue({
   vuetify,
@@ -14,3 +13,5 @@ new Vue({
 
 Vue.use(bootstrap)
 Vue.use(p5)
+
+Vue.config.productionTip = false
