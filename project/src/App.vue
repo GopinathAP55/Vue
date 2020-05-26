@@ -8,7 +8,7 @@
 
 
 
-    <AudioVideoTest />
+    <DataTable />
 
 
   </div>
@@ -25,7 +25,7 @@ import FormValidation from './components/FormValidation'
 export default {
   name: "app",
   components: {
-    AudioVideoTest
+    DataTable
   },
   data: () => ({
     msg: "gopi",
