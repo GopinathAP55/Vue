@@ -16,6 +16,7 @@
     "bootstrap": "^4.4.1",
     "chai": "^4.2.0",
     "core-js": "^3.6.4",
+    "d3": "^5.16.0",
     "fast-speedtest-api": "^0.3.2",
     "git": "^0.1.5",
     "istanbul-instrumenter-loader": "^3.0.1",
