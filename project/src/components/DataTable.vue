@@ -1,18 +1,23 @@
 <template>
   <div data-app>
-   
-    <v-data-table
-      :headers="headers"
-      :items="desserts"
-      class="elevation-1"
-      fixed-header
-      height="300px"
-    >
-      <template v-slot:item.glutenfree="{ item }">
-        <v-simple-checkbox v-model="item.glutenfree" disabled></v-simple-checkbox>
-      </template>
-    </v-data-table>
-    <div  class="col-md-6">
+    <div class="myDiv">
+      <v-data-table
+        :headers="headers"
+        :items="desserts"
+        class="elevation-1"
+        fixed-header
+        height="100px"
+        width="100px"
+      >
+        <template v-slot:item.glutenfree="{ item }">
+          <v-simple-checkbox
+            v-model="item.glutenfree"
+            disabled
+          ></v-simple-checkbox>
+        </template>
+      </v-data-table>
+    </div>
+    <!-- <div  class="col-md-6">
       <input
         @change.prevent="showDropdown = !showDropdown"
         class="regular-checkbox"
@@ -22,35 +27,91 @@
       />
 
       <label> Include Graph</label>
-      </div>
-      <div  id='drop' style="margin-right:125px ;color: blueviolet;" class="col-md-6" v-show="showDropdown">
-      
-       <v-col  cols="12" sm="6">
-          <v-select 
-            v-model="value"
-            :items="items"
-            chips
-            label="Select"
-            multiple
-            
-          ></v-select>
-        </v-col>
-      
-    </div>                                        
-    
+      </div> -->
+    <div
+      id="drop"
+      style="margin-right:125px ;color: blueviolet;"
+      class="col-md-6"
+      v-show="showDropdown"
+    >
+      <v-col cols="12" sm="6">
+        <v-select
+          v-model="value"
+          :items="items"
+          chips
+          label="Select"
+          multiple
+        ></v-select>
+      </v-col>
+    </div>
+
+    <div>
+      <!-- <table id='myTable' style='margin:10px ; height: 20px; overflow: auto' >
+         <th>Name 
+         </th>
+         <th>Age
+         </th>
+       </table> -->
+
+      <!-- <table id='myTable' >
+    <thead>
+         <th>Name 
+         </th>
+         <th>Age
+         </th>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table> -->
+
+      <table id="myTable" class="table">
+        <thead id='head'>
+          <th scope="col">Last</th>
+          <th scope="col-md-2">Handle</th>
+          <th scope="col-md-2">Handle</th>
+        </thead>
+        <tbody scope="col">
+          <tr scope="col">
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <button @click="addValues">Add</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "DataTable",
+  methods: {
+    addValues() {
+      var table = document.getElementById("myTable");
+
+      this.desserts.forEach(d => {
+      var row = table.insertRow(0)
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        cell1.innerHTML = d.name;
+        cell2.innerHTML = d.fat;
+        cell3.innerHTML = d.protein;
+      
+     
+      });
+    }
+  },
   data() {
     return {
-      items: ['foo', 'bar', 'fizz', 'buzz'],
+      items: ["foo", "bar", "fizz", "buzz"],
       value: [],
       showDropdown: false,
+      values: "gopi",
       desserts: [
         {
+          data :{
+            
           name: "Frozen Yogurt",
           calories: 159,
           fat: 6.0,
@@ -58,6 +119,7 @@ export default {
           protein: 4.0,
           iron: "1%",
           glutenfree: true
+          },
         },
         {
           name: "Ice cream sandwich",
@@ -133,7 +195,7 @@ export default {
 };
 </script>
 
-<style  scoped>
+<style scoped>
 .correct {
   margin-left: 5%;
 }
@@ -144,5 +206,28 @@ export default {
   padding-left: 150px;
   margin-top: -100px;
 }
-</style>
 
+tbody {
+  display: block;
+  max-height: 160px;
+  overflow-y: scroll;
+  width: 150%;
+}
+/* tbody tr {
+  display: table;
+  width: 400px;
+  table-layout: fixed;
+} */
+#head {
+  display: table;
+  width: 150%;
+  table-layout: fixed;
+}
+table {
+  width: 350px;
+}
+
+td {
+  width: 100%;
+}
+</style>

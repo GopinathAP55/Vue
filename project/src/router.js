@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import DataTable from './components/DataTable'
 import AudioVideoTest from './components/audioVideoTest'
 import GraphUsingD3 from './components/GraphUsingD3'
+import  FormValidation from './components/FormValidation'
+
 
 Vue.use(Router)
 
@@ -11,7 +13,7 @@ export default new Router({
 
   routes: [
     {
-      path: '/table',
+      path: '/Table',
       name: 'table',
       component: DataTable
     },
@@ -23,6 +25,10 @@ export default new Router({
     {
       path: '/Graph',
       component: GraphUsingD3
+    },
+    {
+      path: '/Form',
+      component: FormValidation
     }
 
   ]

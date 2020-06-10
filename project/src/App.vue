@@ -8,9 +8,11 @@
 
 
 
-       <router-link to="/table">  <button class="btn btn-primary" >Table</button> </router-link>
-      <router-link to="/Audio">  <button class="btn btn-primary" >Audio</button> </router-link>
-        <router-link to="/Graph">  <button class="btn btn-primary" >Graph</button> </router-link>
+       <router-link to="/Table">  <v-btn  class="btn btn-link">Table</v-btn> </router-link>
+      <router-link to="/Audio">  <v-btn   class="btn btn-link">Audio</v-btn> </router-link>
+        <router-link to="/Graph">  <v-btn  class="btn btn-link" >Graph</v-btn> </router-link>
+                <router-link to="/Form">  <v-btn  class="btn btn-link" >Form</v-btn> </router-link>
+
 
 
 
