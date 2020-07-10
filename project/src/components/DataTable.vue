@@ -68,8 +68,13 @@
       <table id="myTable" class="table">
         <thead id='head'>
           <th scope="col">Last</th>
+        <div v-if='values==="gop"'> 
           <th scope="col-md-2">Handle</th>
+          <th scope="col-md-2">Handle2</th>
+        </div>
+        <div v-else>
           <th scope="col-md-2">Handle</th>
+        </div>
         </thead>
         <tbody scope="col">
           <tr scope="col">

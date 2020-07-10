@@ -12,24 +12,49 @@
       one day
     </button>
 
-    <button style="margin:10px" id="week" >one month</button>
+    <button style="margin:10px" id="week">one month</button>
 
-    <a  @click="test(1, 2, week)" style='color:red'>one year</a>
+    <a id="getClassName" @click="test(1, 2, week)" style="color:red"
+      >one year</a
+    >
 
-    <button  style=''class="btn btn-link ">myButton</button>
-    
+    <button @click="base64()" class=" btn btn-link ">Change Base64</button>
   </div>
 </template>
 
 <script>
+import { bus } from "../main";
+import { $ } from "jquery";
+
 export default {
   name: "GraphUsingD3",
+  created() {
+    console.log("creataed");
+    bus.$on("emitTest", this.emitTest);
+  },
+  // destroyed(){
+  //   console.log('gop')
+  //   // bus.$off('emitTest',this.emitTest)
+  // },
+
   data() {
     return {
-      week: "WEEK"
+      week: "WEEK",
+      emittedData:''
     };
   },
+  watch: {
+    emittedData(){
+      console.log('watv')
+       bus.$emit('returnValue',this.emittedData)
+    }
+  },
   mounted() {
+    var element = document.getElementById("getClassName");
+    console.log(element);
+    element.addEventListener("click", function() {
+      console.log("added");
+    });
     const svg = d3.select("svg");
     // svg.style('background-color','red')
     // svg.append('circle')
@@ -51,17 +76,40 @@ export default {
       .style("fill", "red");
   },
   methods: {
+    base64() {
+      
+this.emittedData = 'chan'
+        var html = d3.select("svg")
+        .attr("version", 1.1)
+        .attr("xmlns", "http://www.w3.org/2000/svg")
+        .node().parentNode.innerHTML;
+
+  //console.log(html);
+  var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
+console.log(imgsrc)  
+  
+    },
+
+    emitTest(val) {
+      console.log("Emitted:"+ val);
+      this.emittedData = 'inside Emit test'
+      
+    },
     test(a, b, c) {
-      console.log(b);
-      console.log(c);
-      switch (c) {
-        case WEEK:
-          console.log(c);
-          break;
-        default:
-          console.log(a);
-          break;
-      }
+      var element = document.getElementById("getClassName");
+      console.log(element);
+      element.addEventListener("click", function() {
+        console.log("added");
+      });
+      
+      // switch (c) {
+      //   case WEEK:
+      //     console.log(c);
+      //     break;
+      //   default:
+      //     console.log(a);
+      //     break;
+      // }
 
       d3.csv("example.csv").then(data => {
         data.forEach(d => {
@@ -142,10 +190,13 @@ text {
   color: crimson;
 }
 
-button:hover, button:focus, button:active, button:visited, .active { 
-    text-decoration: underline;
-    color:#000;
-        border:none
-
+button:hover,
+button:focus,
+button:active,
+button:visited,
+.active {
+  text-decoration: underline;
+  color: #000;
+  border: none;
 }
 </style>

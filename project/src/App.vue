@@ -18,6 +18,8 @@
 
 
       <router-view></router-view>
+      <textarea v-model='gopi' name="gopi" id="" cols="30" rows="10"></textarea>
+      <HelloWorld :names1='fromStorevalue'/>
 
 
   </div>
@@ -33,14 +35,21 @@ import FormValidation from './components/FormValidation'
 import GraphUsingD3 from './components/GraphUsingD3'
 
 export default {
+  computed:{
+    fromStorevalue(){
+      return this.$store.state.name + this.$store.getters.myName
+    }
+  },
   name: "app",
   components: {
     DataTable,
     AudioVideoTest,
-    GraphUsingD3
+    GraphUsingD3,
+    HelloWorld
   },
   data: () => ({
-   
+   gopi:'tested'
+
   }),
   message: "",
   methods: {

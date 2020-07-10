@@ -25,12 +25,13 @@
     "mocha-webpack": "^1.1.0",
     "moment": "^2.26.0",
     "nyc": "^15.0.1",
-    "p5": "^1.0.0",
     "pip": "0.0.1",
+    "rxjs": "^6.6.0",
     "vue": "^2.6.11",
     "vue-p5": "^0.8.3",
     "vue-router": "^3.1.6",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.2.11",
+    "vuex": "^3.5.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",

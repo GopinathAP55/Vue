@@ -6,8 +6,8 @@
 
   </div> -->
 
-  <h1>gopi</h1>
-  <button @click="clickValue=true"></button>
+  <h1>gopi value:{{ names1 }}</h1>
+  <button style='margin-left:250px' id='but' @click="clickValue">Mutation</button>
 
 
 
@@ -17,12 +17,31 @@
 
 <script>
 export default {
+    computed:{
+    fromStorevalue(){
+      return this.$store.state.name + this.$store.getters.myName
+    }
+  },
   name: 'HelloWorld',
   props:["names1"],
   data() {
     return {
       msg:'new message',
-      clickValue:false
+    }
+  },
+  methods:{
+    clickValue(){
+      this.$store.commit('setName','gopi')
+      console.log(this.fromStorevalue)
+      document.getElementById('but').style.marginLeft=100+'px'
+    let margin,margin2
+
+      margin = {top:20}
+       margin.top=40
+
+       margin2 = {top:20}
+       console.log(margin.top)
+       console.log(margin2.top)
     }
   }
 
