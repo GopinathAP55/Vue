@@ -25,6 +25,7 @@
 <script>
 import { bus } from "../main";
 import { $ } from "jquery";
+import { html2canvas } from 'html2canvas'
 
 export default {
   name: "GraphUsingD3",
@@ -79,6 +80,10 @@ export default {
     base64() {
       
 this.emittedData = 'chan'
+
+d3.selectAll('circle')
+.style('fill','blue')
+
         var html = d3.select("svg")
         .attr("version", 1.1)
         .attr("xmlns", "http://www.w3.org/2000/svg")
@@ -86,8 +91,8 @@ this.emittedData = 'chan'
 
   //console.log(html);
   var imgsrc = 'data:image/svg+xml;base64,'+ btoa(html);
-console.log(imgsrc)  
-  
+ 
+  ;
     },
 
     emitTest(val) {
@@ -160,13 +165,26 @@ console.log(imgsrc)
 
         //We can use the d3.scalarPoint to align the dots
 
-        g.selectAll("circle")
-          .data(data)
-          .enter()
-          .append("circle")
-          .attr("cy", d => yScale(d.country))
-          .attr("cx", d => xScale(d.population))
-          .attr("r", yScale.bandwidth() - 20);
+        // g.selectAll("circle")
+        //   .data(data)
+        //   .enter()
+        //   .append("circle")
+        //   .attr("cy", d => yScale(d.country))
+        //   .attr("cx", d => xScale(d.population))
+        //   .attr("r", yScale.bandwidth() - 20)
+
+
+
+           svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return xScale(d.country) })
+        .y(function(d) { return yScale(d.population) })
+        )
+          
 
         g.append("text")
           .text("Countries Population")

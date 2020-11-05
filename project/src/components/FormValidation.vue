@@ -9,7 +9,23 @@
         </form>
 
         <button @click='dateCheck' class="btn btn-danger">Date check</button>
+
+      
+
+           
+    <v-dialog
+      v-model="dialog"
+      persistent
+      max-width="600px"
+    >
+      
+      
+               </v-dialog>
+  
     </div>
+
+
+    
 </template>
 
 <script>
@@ -25,10 +41,14 @@ export default {
     mounted(){
          console.log('mounted')
     },
+    computed(){
+     console.log('computed')
+    },
    data() {
        return {
            name:'',
-           age:''
+           age:'',
+           dialog:false
        }
       
    },
@@ -38,6 +58,7 @@ export default {
            console.log(`return val:${val}`)
        },
        dateCheck(){
+           this.dialog = !this.dialog
 
           bus.$emit('emitTest','header')
            var current = moment()

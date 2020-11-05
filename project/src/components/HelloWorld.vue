@@ -1,13 +1,18 @@
 <template>
 <div > 
-  <!-- <div v-bind:key="name.id" v-for="name in names1" >
-    <h1>{{name.name}}</h1>
-    <button class="delete" @click="$emit('del-name', name.id)">Delete </button>
+  <div v-bind:key="name.id" v-for="name in array" >
+    <h1>{{name}}</h1>
+    
 
-  </div> -->
-
+  </div>
+<button class="delete" @click="arrayValue()">Change </button>
   <h1>gopi value:{{ names1 }}</h1>
   <button style='margin-left:250px' id='but' @click="clickValue">Mutation</button>
+      <h1>check</h1>
+  <label   class="regular_checkbox_container" >check
+                                <input v-model="checkbox" type="checkbox" checked >
+  </label>
+
 
 
 
@@ -17,6 +22,7 @@
 
 <script>
 export default {
+  
     computed:{
     fromStorevalue(){
       return this.$store.state.name + this.$store.getters.myName
@@ -26,10 +32,22 @@ export default {
   props:["names1"],
   data() {
     return {
+      checkbox:false,
       msg:'new message',
+      array:['gop','gop1','gop2']
+    }
+  },
+  watch:{
+    checkbox(){
+      console.log(this.checkbox)
     }
   },
   methods:{
+    arrayValue(){
+      this.array.forEach(a=>{
+        a.style.backgroundColor='red'
+      });
+    },
     clickValue(){
       this.$store.commit('setName','gopi')
       console.log(this.fromStorevalue)
@@ -42,6 +60,8 @@ export default {
        margin2 = {top:20}
        console.log(margin.top)
        console.log(margin2.top)
+
+
     }
   }
 

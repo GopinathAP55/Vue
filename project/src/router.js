@@ -4,6 +4,9 @@ import DataTable from './components/DataTable'
 import AudioVideoTest from './components/audioVideoTest'
 import GraphUsingD3 from './components/GraphUsingD3'
 import  FormValidation from './components/FormValidation'
+import LineGraph from './components/LineGraph'
+import Form from './components/Form'
+
 
 
 Vue.use(Router)
@@ -29,6 +32,15 @@ export default new Router({
     {
       path: '/Form',
       component: FormValidation
+    },
+    {
+      path: '/Line',
+      component: LineGraph
+    },
+
+    {
+      path:'/Form1',
+      component:Form
     }
 
   ]

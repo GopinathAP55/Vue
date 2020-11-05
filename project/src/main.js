@@ -4,6 +4,9 @@ import vuetify from './plugins/vuetify'
 import bootstrap from '../node_modules/bootstrap/dist/css/bootstrap.css'
 import router from "./router";
 import { store } from "./store/store"
+import VueDarkMode from "@growthbunker/vuedarkmode";
+
+Vue.use(VueDarkMode);
 
 export const bus = new Vue()
 

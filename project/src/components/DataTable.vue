@@ -6,8 +6,6 @@
         :items="desserts"
         class="elevation-1"
         fixed-header
-        height="100px"
-        width="100px"
       >
         <template v-slot:item.glutenfree="{ item }">
           <v-simple-checkbox
@@ -15,6 +13,16 @@
             disabled
           ></v-simple-checkbox>
         </template>
+
+        <template slot="body.append">
+                    <tr class="pink--text">
+                        <th class="title">Totals</th>
+                        <th class="title">{{ sumField('calories') }}</th>
+                        <th class="title">{{ sumField('fat') }}</th>
+                        <th class="title">{{ sumField('carbs') }}</th>
+                        <th class="title">{{ sumField('protein') }}</th>
+                    </tr>
+                </template>
       </v-data-table>
     </div>
     <!-- <div  class="col-md-6">
@@ -91,7 +99,12 @@
 export default {
   name: "DataTable",
   methods: {
+    sumField(key) {
+        // sum data in give key (property)
+        return this.desserts.reduce((a, b) => a + (b[key] || 0), 0)
+    },
     addValues() {
+      this.valueForWatch = 'gopi'
       var table = document.getElementById("myTable");
 
       this.desserts.forEach(d => {
@@ -107,8 +120,25 @@ export default {
       });
     }
   },
+  watch:{
+    valueForWatch(){
+      this.headers.filter(val=>{ 
+        if(val.value ==='fat'){
+          val.value='fat30'
+          }
+           console.log(val.value )
+          return val
+        })
+
+
+        this.headers.splice(0,2)
+
+      console.log(this.headers)
+    }
+  },
   data() {
     return {
+      valueForWatch:'',
       items: ["foo", "bar", "fizz", "buzz"],
       value: [],
       showDropdown: false,
